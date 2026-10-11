@@ -1,0 +1,2 @@
+chown alice missing.txt
+ls NOT_EXECUTED

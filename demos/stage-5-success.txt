@@ -1,0 +1,20 @@
+# Создание файла в текущем каталоге и проверка через ls
+ls
+cd /docs
+touch created.txt
+ls
+head created.txt
+chown student created.txt
+# Существующий файл: время меняется, содержимое остается
+cd /
+head readme.txt
+touch readme.txt
+head readme.txt
+chown student readme.txt
+# Работа с каталогом и относительным путем
+touch docs
+chown student docs
+du docs
+cd a/b/c
+ls
+cd

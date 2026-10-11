@@ -133,4 +133,14 @@ public final class MemoryVfs {
     public static String child(String parent, String name) {
         return parent.equals("/") ? "/" + name : parent + "/" + name;
     }
+
+    /** Creates an empty virtual file or updates its modification time. */
+    public void touch(String path) {
+        Instant now = Instant.now();
+        if (!nodes.containsKey(path)) {
+            requireDirectory(parent(path));
+            nodes.put(path, new VfsNode(false, new byte[0], now));
+        }
+        node(path).touch(now);
+    }
 }

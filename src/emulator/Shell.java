@@ -7,6 +7,7 @@ import java.util.Map;
 public final class Shell {
     private final CommandParser parser;
     private final BasicCommands commands;
+    private final MutationCommands mutations;
 
     public Shell(Map<String, String> environment) {
         this(environment, new MemoryVfs());
@@ -15,6 +16,7 @@ public final class Shell {
     public Shell(Map<String, String> environment, MemoryVfs vfs) {
         parser = new CommandParser(environment);
         commands = new BasicCommands(vfs);
+        mutations = new MutationCommands(vfs, commands);
     }
 
     /** Processes a single command and returns output plus a window-close signal. */
@@ -31,6 +33,8 @@ public final class Shell {
                 case "cd" -> new Result(commands.cd(arguments), false);
                 case "head" -> new Result(commands.head(arguments), false);
                 case "du" -> new Result(commands.du(arguments), false);
+                case "touch" -> new Result(mutations.touch(arguments), false);
+                case "chown" -> new Result(mutations.chown(arguments), false);
                 case "exit" -> exit(arguments);
                 default -> Result.error("неизвестная команда: " + command);
             };

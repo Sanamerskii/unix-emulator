@@ -23,4 +23,7 @@ public final class VfsNode {
     public String owner() { return owner; }
     public Instant modified() { return modified; }
     public byte[] content() { return Base64.getDecoder().decode(base64); }
+
+    void changeOwner(String owner) { this.owner = owner; }
+    void touch(Instant time) { modified = time; }
 }

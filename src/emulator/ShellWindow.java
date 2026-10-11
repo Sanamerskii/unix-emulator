@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,7 +14,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-/** Swing terminal with an editable command line. */
+/** Swing terminal with an editable command line; not intended for serialization. */
+@SuppressWarnings("serial")
 public final class ShellWindow extends JFrame {
     private static final int WINDOW_WIDTH = 850;
     private static final int WINDOW_HEIGHT = 520;
@@ -23,6 +25,7 @@ public final class ShellWindow extends JFrame {
     private final Configuration configuration;
     private final JTextArea transcript = new JTextArea();
     private final JTextField input = new JTextField();
+    private final JButton submitButton = new JButton("Ввод");
 
     public ShellWindow(Configuration configuration, MemoryVfs vfs) {
         super("UNIX Emulator — VFS: " + configuration.vfsName());
@@ -38,9 +41,11 @@ public final class ShellWindow extends JFrame {
         promptLabel.setText(shell.prompt());
         prompt.add(promptLabel, BorderLayout.WEST);
         prompt.add(input, BorderLayout.CENTER);
+        prompt.add(submitButton, BorderLayout.EAST);
         add(prompt, BorderLayout.SOUTH);
         input.setFont(new Font(Font.MONOSPACED, Font.PLAIN, FONT_SIZE));
         input.addActionListener(event -> submit());
+        submitButton.addActionListener(event -> submit());
     }
 
     private void configureTranscript() {
@@ -49,7 +54,7 @@ public final class ShellWindow extends JFrame {
         transcript.setBackground(new Color(24, 28, 35));
         transcript.setForeground(new Color(225, 235, 225));
         transcript.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        transcript.setText(configuration.debugOutput() + "Этап 4. Команды: ls, cd, head, du, exit.\n"
+        transcript.setText(configuration.debugOutput() + "Этап 5. Команды: ls, cd, head, du, touch, chown, exit.\n"
                 + "Переменные: $HOME, ${HOME}. Все пути команд относятся к VFS.\n\n");
         add(new JScrollPane(transcript), BorderLayout.CENTER);
     }
@@ -66,6 +71,8 @@ public final class ShellWindow extends JFrame {
         transcript.setCaretPosition(transcript.getDocument().getLength());
         if (result.shouldExit()) {
             dispose();
+        } else {
+            input.requestFocusInWindow();
         }
     }
 
@@ -81,6 +88,7 @@ public final class ShellWindow extends JFrame {
             return;
         }
         input.setEnabled(false);
+        submitButton.setEnabled(false);
         new SwingWorker<StartupScript.Report, String>() {
             @Override
             protected StartupScript.Report doInBackground() {
@@ -110,6 +118,7 @@ public final class ShellWindow extends JFrame {
             transcript.append("Ошибка стартового скрипта: " + exception.getMessage() + "\n");
         }
         input.setEnabled(true);
+        submitButton.setEnabled(true);
         promptLabel.setText(shell.prompt());
         input.requestFocusInWindow();
     }
