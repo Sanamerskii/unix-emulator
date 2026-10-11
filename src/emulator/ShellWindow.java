@@ -23,13 +23,14 @@ public final class ShellWindow extends JFrame {
     private final JTextArea transcript = new JTextArea();
     private final JTextField input = new JTextField();
 
-    public ShellWindow(Configuration configuration) {
+    public ShellWindow(Configuration configuration, MemoryVfs vfs) {
         super("UNIX Emulator — VFS: " + configuration.vfsName());
         this.configuration = configuration;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocationRelativeTo(null);
         configureTranscript();
+        transcript.append("VFS загружена в память.\n");
         JPanel prompt = new JPanel(new BorderLayout(8, 0));
         prompt.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         prompt.add(new JLabel("user@" + configuration.vfsName() + ":~$"), BorderLayout.WEST);
@@ -45,7 +46,7 @@ public final class ShellWindow extends JFrame {
         transcript.setBackground(new Color(24, 28, 35));
         transcript.setForeground(new Color(225, 235, 225));
         transcript.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        transcript.setText(configuration.debugOutput() + "Этап 2. Команды: ls [путь], cd [путь], exit.\n"
+        transcript.setText(configuration.debugOutput() + "Этап 3. Команды: ls [путь], cd [путь], exit.\n"
                 + "ls и cd — заглушки. Переменные: $HOME, ${HOME}.\n\n");
         add(new JScrollPane(transcript), BorderLayout.CENTER);
     }

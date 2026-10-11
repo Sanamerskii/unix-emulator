@@ -5,3 +5,4 @@ mkdir -p build/test-classes
 javac -encoding UTF-8 --release 17 -d build/test-classes src/emulator/*.java tests/emulator/*.java
 java -Djava.awt.headless=true -cp build/test-classes emulator.ShellTest
 java -Djava.awt.headless=true -cp build/test-classes emulator.ConfigurationTest
+java -Djava.awt.headless=true -cp build/test-classes emulator.VfsTest

@@ -1,0 +1,9 @@
+# В этапе 3 ls и cd еще заглушки; загрузка VFS отображается перед скриптом
+ls
+ls /
+cd /
+ls a/b/c
+cd "$HOME"
+ls '$HOME'
+ls "${HOME}/My Documents"
+ls ""
