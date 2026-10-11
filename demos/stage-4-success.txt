@@ -1,0 +1,18 @@
+# ls: текущий каталог, заданный каталог и файл
+ls
+ls docs
+ls readme.txt
+# cd: абсолютный, относительный путь и родительский каталог
+cd /docs
+ls
+head "My Notes.txt"
+cd ../a/b/c
+ls
+cd
+# head: первые 10 строк, файл с меньшим числом строк
+head readme.txt
+head docs/guide.txt
+# du: текущий каталог, заданный каталог и файл
+du
+du a
+du readme.txt

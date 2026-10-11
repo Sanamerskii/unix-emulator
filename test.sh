@@ -6,3 +6,4 @@ javac -encoding UTF-8 --release 17 -d build/test-classes src/emulator/*.java tes
 java -Djava.awt.headless=true -cp build/test-classes emulator.ShellTest
 java -Djava.awt.headless=true -cp build/test-classes emulator.ConfigurationTest
 java -Djava.awt.headless=true -cp build/test-classes emulator.VfsTest
+java -Djava.awt.headless=true -cp build/test-classes emulator.BasicCommandsTest

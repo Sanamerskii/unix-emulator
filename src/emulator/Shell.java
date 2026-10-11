@@ -3,13 +3,18 @@ package emulator;
 import java.util.List;
 import java.util.Map;
 
-/** Stage-one command dispatcher, independent of the graphical interface. */
+/** Command dispatcher, independent of the graphical interface. */
 public final class Shell {
-    private static final int MAX_PATH_ARGUMENTS = 1;
     private final CommandParser parser;
+    private final BasicCommands commands;
 
     public Shell(Map<String, String> environment) {
+        this(environment, new MemoryVfs());
+    }
+
+    public Shell(Map<String, String> environment, MemoryVfs vfs) {
         parser = new CommandParser(environment);
+        commands = new BasicCommands(vfs);
     }
 
     /** Processes a single command and returns output plus a window-close signal. */
@@ -22,7 +27,10 @@ public final class Shell {
             String command = words.get(0);
             List<String> arguments = words.subList(1, words.size());
             return switch (command) {
-                case "ls", "cd" -> stub(command, arguments);
+                case "ls" -> new Result(commands.ls(arguments), false);
+                case "cd" -> new Result(commands.cd(arguments), false);
+                case "head" -> new Result(commands.head(arguments), false);
+                case "du" -> new Result(commands.du(arguments), false);
                 case "exit" -> exit(arguments);
                 default -> Result.error("неизвестная команда: " + command);
             };
@@ -31,25 +39,11 @@ public final class Shell {
         }
     }
 
-    private Result stub(String command, List<String> arguments) {
-        if (arguments.size() > MAX_PATH_ARGUMENTS || arguments.stream().anyMatch(arg -> arg.startsWith("-"))) {
-            return Result.error("использование: " + command + " [путь] (опции пока не поддерживаются)");
-        }
-        String rendered = arguments.stream().map(Shell::quote).reduce((left, right) -> left + ", " + right)
-                .orElse("");
-        return new Result(command + " args=[" + rendered + "]", false);
-    }
-
     private Result exit(List<String> arguments) {
         if (!arguments.isEmpty()) {
             return Result.error("использование: exit (без аргументов)");
         }
         return new Result("Завершение работы.", true);
-    }
-
-    private static String quote(String value) {
-        return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"")
-                .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
     }
 
     /** Result of one REPL iteration. */
@@ -64,6 +58,6 @@ public final class Shell {
     }
 
     public String prompt() {
-        return "$ ";
+        return "user@vfs:" + commands.currentDirectory() + "$ ";
     }
 }

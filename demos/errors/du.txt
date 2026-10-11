@@ -1,0 +1,2 @@
+du a b
+ls NOT_EXECUTED

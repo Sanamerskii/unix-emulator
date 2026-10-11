@@ -1,0 +1,2 @@
+ls ${HOME
+ls NOT_EXECUTED

@@ -1,0 +1,2 @@
+unknown-command
+ls NOT_EXECUTED
