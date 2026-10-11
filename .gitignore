@@ -1,0 +1,10 @@
+build/
+*.class
+*.jar
+*.zip
+*.tar
+*.gz
+.DS_Store
+.idea/
+.vscode/
+*.iml
