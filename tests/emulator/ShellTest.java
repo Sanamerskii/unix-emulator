@@ -14,14 +14,14 @@ public final class ShellTest {
                 List.of("ls", "/home/student/My Documents")), "braces and quoted path");
         require(parser.parse("ls '$HOME'").equals(List.of("ls", "$HOME")), "single quotes");
         Shell shell = new Shell(System.getenv());
-        require(!shell.execute("ls").output().startsWith("Ошибка:"), "ls");
-        require(!shell.execute("cd").output().startsWith("Ошибка:"), "cd");
-        require(shell.execute("pwd").output().startsWith("Ошибка:"), "unknown command");
-        require(shell.execute("cd a b").output().startsWith("Ошибка:"), "invalid arguments");
-        require(shell.execute("ls \"broken").output().startsWith("Ошибка:"), "parser error");
-        require(!shell.execute("ls").output().startsWith("Ошибка:"), "REPL continues after error");
+        require(!shell.execute("ls").failed(), "ls");
+        require(!shell.execute("cd").failed(), "cd");
+        require(shell.execute("pwd").failed(), "unknown command");
+        require(shell.execute("cd a b").failed(), "invalid arguments");
+        require(shell.execute("ls \"broken").failed(), "parser error");
+        require(!shell.execute("ls").failed(), "REPL continues after error");
         require(shell.execute("exit").shouldExit(), "exit");
-        require(shell.execute("exit now").output().startsWith("Ошибка:"), "exit arguments");
+        require(shell.execute("exit now").failed(), "exit arguments");
         System.out.println("PASS: required parser and REPL behavior");
     }
 

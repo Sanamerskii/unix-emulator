@@ -24,16 +24,16 @@ public final class Shell {
             return switch (command) {
                 case "ls", "cd" -> stub(command, arguments);
                 case "exit" -> exit(arguments);
-                default -> new Result("Ошибка: неизвестная команда: " + command, false);
+                default -> Result.error("неизвестная команда: " + command);
             };
         } catch (IllegalArgumentException exception) {
-            return new Result("Ошибка: " + exception.getMessage(), false);
+            return Result.error(exception.getMessage());
         }
     }
 
     private Result stub(String command, List<String> arguments) {
         if (arguments.size() > MAX_PATH_ARGUMENTS || arguments.stream().anyMatch(arg -> arg.startsWith("-"))) {
-            return new Result("Ошибка: использование: " + command + " [путь] (опции пока не поддерживаются)", false);
+            return Result.error("использование: " + command + " [путь] (опции пока не поддерживаются)");
         }
         String rendered = arguments.stream().map(Shell::quote).reduce((left, right) -> left + ", " + right)
                 .orElse("");
@@ -42,7 +42,7 @@ public final class Shell {
 
     private Result exit(List<String> arguments) {
         if (!arguments.isEmpty()) {
-            return new Result("Ошибка: использование: exit (без аргументов)", false);
+            return Result.error("использование: exit (без аргументов)");
         }
         return new Result("Завершение работы.", true);
     }
@@ -53,5 +53,17 @@ public final class Shell {
     }
 
     /** Result of one REPL iteration. */
-    public record Result(String output, boolean shouldExit) { }
+    public record Result(String output, boolean shouldExit, boolean failed) {
+        public Result(String output, boolean shouldExit) {
+            this(output, shouldExit, false);
+        }
+
+        public static Result error(String message) {
+            return new Result("Ошибка: " + message, false, true);
+        }
+    }
+
+    public String prompt() {
+        return "$ ";
+    }
 }

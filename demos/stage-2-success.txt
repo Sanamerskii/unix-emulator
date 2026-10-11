@@ -1,0 +1,10 @@
+# Команды из реального окружения, кавычки и экранирование
+ls
+cd
+ls /tmp
+cd "$HOME"
+ls "${HOME}/My Documents"
+ls '$HOME'
+ls \$HOME
+cd My\ Documents
+ls ""
